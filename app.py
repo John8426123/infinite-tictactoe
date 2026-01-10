@@ -18,12 +18,10 @@ file_handler.setFormatter(formatter)
 history_logger.addHandler(file_handler)
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'pro-battle-token-secret'
-socketio = SocketIO(app, cors_allowed_origins="*", ping_timeout=60, ping_interval=25)
-
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'local-dev-secret')# 本地端測試時，強制使用 threading 模式，避免 eventlet 卡死
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading', ping_timeout=60, ping_interval=25)
 LOG_FILE = "chat_records.log"
-ADMIN_KEY = "admin123"
-
+ADMIN_KEY = os.environ.get('ADMIN_KEY', 'local-admin-key')
 # 初始化遊戲狀態
 game = GameState()
 

@@ -1,4 +1,3 @@
-import eventlet  # <--- 新增這一行
 import time
 import random
 import logging
@@ -123,7 +122,6 @@ def simulate_move(board, x_moves, o_moves, move_idx, player):
 
 def minimax_infinite(board, x_moves, o_moves, depth, is_maximizing, role, opponent, alpha=-float('inf'),
                      beta=float('inf')):
-    eventlet.sleep(0)  # <--- 【關鍵修改】讓伺服器換氣，防止斷線！
     winner = check_winner_on_board(board)
     if winner == role:
         return 100 - depth
@@ -131,7 +129,7 @@ def minimax_infinite(board, x_moves, o_moves, depth, is_maximizing, role, oppone
         return depth - 100
     elif "" not in board:
         return 0
-    if depth >= 2: return 0  # 稍微降低深度以優化效能
+    if depth >= 5: return 0  # 稍微降低深度以優化效能
 
     empty = [i for i in range(9) if board[i] == ""]
 
@@ -228,7 +226,7 @@ def ai_make_move(game: GameState):
     role = game.current_turn
     if not game.ai_enabled[role]: return None
 
-    #time.sleep(0.3)
+    time.sleep(0.3)
 
     board = game.board.copy()
     x_moves = game.x_moves.copy()

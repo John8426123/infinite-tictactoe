@@ -368,7 +368,17 @@
 
                 this.socket.on('new_message', d => {
                     const b = document.getElementById('chatBox');
-                    b.innerHTML += `<div><b>${d.sender}:</b> ${d.message}</div>`;
+
+                    const div = document.createElement('div');
+                    const sender = document.createElement('b');
+                    sender.textContent = d.sender + ": "; // 自動轉義，無法執行腳本
+
+                    const msg = document.createTextNode(d.message); // 安全的文字節點
+
+                    div.appendChild(sender);
+                    div.appendChild(msg);
+                    b.appendChild(div);
+
                     b.scrollTop = b.scrollHeight;
                 });
 
@@ -413,7 +423,12 @@
                 document.getElementById('myId').textContent = "身份：" + (this.role === "Observer" ? "觀察者 👀" : "玩家 " + this.role + " 🎮");
 
                 const qBox = document.getElementById('queueBox');
-                qBox.innerHTML = d.queue.map((p, i) => `<div>#${i+1} ${p.name}</div>`).join('');
+                qBox.innerHTML = ''; // 先清空
+                d.queue.forEach((p, i) => {
+                        const div = document.createElement('div');
+                        div.textContent = `#${i+1} ${p.name}`; // 安全賦值
+                        qBox.appendChild(div);
+                });
             },
 
             showWinner(winner, winner_name) {
@@ -437,7 +452,11 @@
 
             notify(msg) {
                 const b = document.getElementById('chatBox');
-                b.innerHTML += `<div style="color:var(--primary); font-weight:bold">[系統] ${msg}</div>`;
+                const div = document.createElement('div');
+                div.style.color = "var(--primary)";
+                div.style.fontWeight = "bold";
+                div.textContent = "[系統] " + msg; // 安全賦值
+                b.appendChild(div);
                 b.scrollTop = b.scrollHeight;
             },
 
